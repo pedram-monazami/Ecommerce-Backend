@@ -1,0 +1,330 @@
+[
+  {
+    "model": "core.user",
+    "pk": 2,
+    "fields": {
+      "username": "user_one",
+      "phone": "09123456788",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc="
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 3,
+    "fields": {
+      "username": "user_two",
+      "phone": "09123456787",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc="
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 4,
+    "fields": {
+      "username": "user_three",
+      "phone": "09123456786",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc="
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 5,
+    "fields": {
+      "username": "user_four",
+      "phone": "09123456785",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc="
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 6,
+    "fields": {
+      "username": "user_five",
+      "phone": "09123456784",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc="
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 7,
+    "fields": {
+      "username": "user_six",
+      "phone": "09123456783",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc="
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 8,
+    "fields": {
+      "username": "user_seven",
+      "phone": "09123456782",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc="
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 9,
+    "fields": {
+      "username": "user_eight",
+      "phone": "09123456781",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc="
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 10,
+    "fields": {
+      "username": "user_nine",
+      "phone": "09123456780",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc="
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "name": "user one",
+      "email": "user.one@example.com",
+      "phone": "09123456788",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc=",
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "name": "user two",
+      "email": "user.two@example.com",
+      "phone": "09123456787",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc=",
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 4,
+    "fields": {
+      "user": 4,
+      "name": "user three",
+      "email": "user.three@example.com",
+      "phone": "09123456786",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc=",
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 5,
+    "fields": {
+      "user": 5,
+      "name": "user four",
+      "email": "user.four@example.com",
+      "phone": "09123456785",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc=",
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 6,
+    "fields": {
+      "user": 6,
+      "name": "user five",
+      "email": "user.five@example.com",
+      "phone": "09123456784",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc=",
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 7,
+    "fields": {
+      "user": 7,
+      "name": "user six",
+      "email": "user.six@example.com",
+      "phone": "09123456783",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc=",
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 8,
+    "fields": {
+      "user": 8,
+      "name": "user seven",
+      "email": "user.seven@example.com",
+      "phone": "09123456782",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc=",
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 9,
+    "fields": {
+      "user": 9,
+      "name": "user eight",
+      "email": "user.eight@example.com",
+      "phone": "09123456781",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc=",
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.customer",
+    "pk": 10,
+    "fields": {
+      "user": 10,
+      "name": "user nine",
+      "email": "user.nine@example.com",
+      "phone": "09123456780",
+      "password": "pbkdf2_sha256$320000$hydrQyBf9XQg6gfpWDEAN0$xT8VNvepcTSgQpACDNR4eQBy1n+XN+7pc1uanvVECTc=",
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 1,
+    "fields": {
+      "country": "Iran",
+      "city": "Rasht",
+      "street": "12 Blv.",
+      "zipcode": "1548748596",
+      "customer": 2,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 2,
+    "fields": {
+      "country": "Iran",
+      "city": "Tehran",
+      "street": "25 Ave.",
+      "zipcode": "2678954321",
+      "customer": 3,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 3,
+    "fields": {
+      "country": "Iran",
+      "city": "Isfahan",
+      "street": "18 St.",
+      "zipcode": "3921857460",
+      "customer": 4,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 4,
+    "fields": {
+      "country": "Iran",
+      "city": "Shiraz",
+      "street": "7 Rd.",
+      "zipcode": "5698102374",
+      "customer": 5,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 5,
+    "fields": {
+      "country": "Iran",
+      "city": "Tabriz",
+      "street": "14 Blvd.",
+      "zipcode": "6482790135",
+      "customer": 6,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 6,
+    "fields": {
+      "country": "Iran",
+      "city": "Mashhad",
+      "street": "31 Rd.",
+      "zipcode": "7459823640",
+      "customer": 7,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 7,
+    "fields": {
+      "country": "Iran",
+      "city": "Kerman",
+      "street": "9 St.",
+      "zipcode": "8217649350",
+      "customer": 8,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 8,
+    "fields": {
+      "country": "Iran",
+      "city": "Yazd",
+      "street": "22 Ave.",
+      "zipcode": "9582736104",
+      "customer": 9,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 9,
+    "fields": {
+      "country": "Iran",
+      "city": "Yazd",
+      "street": "54 St.",
+      "zipcode": "9598747504",
+      "customer": 9,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  },
+  {
+    "model": "customer.address",
+    "pk": 10,
+    "fields": {
+      "country": "Iran",
+      "city": "Hamedan",
+      "street": "6 Blvd.",
+      "zipcode": "1038945627",
+      "customer": 10,
+      "create_datetime": "2023-09-06T10:00:00+00:00",
+      "modify_datetime": "2023-09-19T10:00:00+00:00"
+    }
+  }
+]
