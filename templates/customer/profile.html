@@ -1,0 +1,80 @@
+<div class="form-row col-9">
+    <div class="form-group col-md-6">
+        <label for="input_country">Phone</label>
+        <input value="{{ items.user }}" type="text" class="form-control" disabled id="input_user"
+               placeholder="09123456789">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="input_city">Name</label>
+        <input value="{{ items.name|title }}" type="text" class="form-control form1" disabled id="input_name"
+               placeholder="Enter name">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="input_country">Email</label>
+        <input value="{{ items.email|title }}" type="text" class="form-control form1" disabled id="input_email"
+               placeholder="test@example.com">
+    </div>
+{#    <div class="form-group col-md-6">#}
+{#        <label for="input_city">Password</label>#}
+{#        <input value="{{ items.password }}" type="password" class="form-control form1" disabled id="input_password"#}
+{#               placeholder="Password">#}
+{#    </div>#}
+</div>
+<div class="modal-footer col-9">
+    <input style="display:none" id="save" type="button" value="Save" class="btn btn-success">
+    <input id="edit" type="button" value="Edit" class="btn btn-primary">
+
+</div>
+<script>
+    function getCookie(cname) {
+        const name = cname + "=";
+        const ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1);
+            if (c.indexOf(name) === 0)
+                return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    $("#edit").click(function () {
+        $('.form1').removeAttr('disabled')
+        $(this).css('display', 'none')
+        $('#save').css('display', 'flex')
+    });
+
+    $("#save").click(function () {
+        let password = $('#input_password').val()
+        let email = $('#input_email').val()
+        let name = $('#input_name').val()
+        $.ajax({
+            type: "PATCH",
+            data: {
+                'password': password,
+                'email': email,
+                'name': name,
+            },
+            url: '{% url 'update_profile' 1 %}'.replace('1', '{{ items.id }}'),
+            headers: {'X-CSRFToken': getCookie('csrftoken')},
+            success: function (response) {
+                Swal.fire(
+                    'Done!',
+                    'Profile edited successfully!',
+                    'success'
+                )
+                $('#input_password').val(password)
+                $('#input_email').val(email)
+                $('#input_name').val(name)
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Edition failed!',
+                })
+            }
+        })
+    });
+
+</script>

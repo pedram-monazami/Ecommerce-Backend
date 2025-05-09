@@ -1,0 +1,130 @@
+{% extends 'base/_base.html' %}
+{% load static %}
+{% block title %}
+    {{ product.brand.name }} | {{ product.name }}
+{% endblock %}
+{% block body %}
+    <link rel="stylesheet" href="{% static 'CSS/product_detail.css' %}">
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    {#    <!DOCTYPE html>#}
+    {#    <html lang="en">#}
+    {#    <head>#}
+    {#        <meta charset="UTF-8">#}
+    {#        <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+    {#        <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+    {#        <link rel="stylesheet" href="style.css" type="text/css">#}
+    {#        <title>Card</title>#}
+    {#    </head>#}
+    {#    <body>#}
+
+    <div class="containerp">
+
+        <div class="card-container">
+            <input type="radio" name="colors-btn" id="color-1" checked>
+            {#            <input type="radio" name="colors-btn" id="color-2">#}
+            {#            <input type="radio" name="colors-btn" id="color-3">#}
+            {#            <input type="radio" name="colors-btn" id="color-4">#}
+            <div class="shoe-area">
+
+                <div class="logo-div">
+                    <img src="" alt="">
+                </div>
+                <div class="floating-div">
+                    <div class="shoe-1"><img src="{{ product.image.url }}" alt="red-nike"></div>
+                    {#                    <div class="shoe-2"><img src="?raw=true" alt="orange-nike"></div>#}
+                    {#                    <div class="shoe-3"><img src="https://github.com/gerrardNwoke/Prdouct-Card/blob/main/Shoe-product-card/imgs/white.png?raw=true" alt="white-nike"></div>#}
+                    {#                    <div class="shoe-4"><img src="https://github.com/gerrardNwoke/Prdouct-Card/blob/main/Shoe-product-card/imgs/black-nike.png?raw=true" alt="black-nike"></div>#}
+                </div>
+
+            </div>
+            <div class="text-area">
+                <div class="heading-area">
+                    <h2>{{ product.name }}</h2>
+                    <h4>{{ product.brand.name }}</h4>
+                    <h5>{{ product.category.name }}</h5>
+                </div>
+
+                <p class="paragraph-area">
+                    {#                        A {{ product.category.name }}#}
+                    <b>Description:</b> {{ product.description }}
+
+                </p>
+
+                <p class="paragraph-area {% if product.count < 1 %}bg-danger{% else %}bg-info{% endif %}">
+                    {#                        A {{ product.category.name }}#}
+                    {% if product.count < 1 %}
+                        <b>Out of stock!</b>
+                    {% else %}
+                        <b>Stock:</b> {{ product.count }}
+                    {% endif %}
+
+                </p>
+
+                {#                <div class="color-selection">#}
+                {#                    <div class="h5-text"><h5>Available Colors: </h5></div>#}
+                {##}
+                {#                    <div class="color-pick-div">#}
+                {#                        <label for="color-1" class="colors color-1"></label>#}
+                {#                        <label for="color-2" class="colors color-2"></label>#}
+                {#                        <label for="color-3"class="colors color-3" ></label>#}
+                {#                        <label for="color-4" class="colors color-4"></label>#}
+                {#                    </div>#}
+                {#                </div>#}
+                <style>.deals-value .amount {
+                    text-decoration: line-through;
+                }
+
+                .woocommerce-Price-currencySymbol {
+                    margin-right: 10px;
+                }</style>
+                <p class="deals-value"><span>
+                    <span class="woocommerce-Price-amount amount font-weight-bold">${{ product.price }}</span>
+                </span></p>
+                <h2 class="price-1 text-danger">${{ product.calc_discounted }}</h2>
+                <div class="price-and-buy-btn">
+
+                    {#                    <h2 class="price-3">$ 914.38</h2>#}
+                    {#                    <h2 class="price-4">$ 884.12</h2>#}
+                    {% if product.count > 0 %}
+                        <button id="buy-btn" class="buy-btn">BUY NOW</button>
+
+                        </div>
+                        <label class="text" for="">Count:</label><input style="width: 70px" class="form-control" type=number name=""
+                                                           id="count" value="1" min="1">
+                    {% else %}
+                    {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+    {#    </body>#}
+    {#    </html>#}
+
+    <script>
+        $('#buy-btn').click(function () {
+            let product_id = {{ product.pk }};
+            let product_count = $('#count').val()
+            {#console.log(product_count)#}
+            {#console.log(product_id)#}
+            {#console.log('{{ csrf_token }}')#}
+            $.ajax({
+                type: "POST",
+                data: {'count': product_count, 'product': product_id,},
+                url: '{% url 'orderitem-list' %}',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function (response) {
+                    let num = Number($('#lblCartCount').html())
+                    $('#lblCartCount').html(num + Number($(`#count`).val()))
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        })
+    </script>
+
+
+    {#    <script src="{% static 'JS/product_detail.js' %}"></script>#}
+{% endblock %}

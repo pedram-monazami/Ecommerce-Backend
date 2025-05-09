@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+    db:
+        image: postgres
+        environment:
+            POSTGRES_USER: 'postgres'
+            POSTGRES_DB: 'postgres'
+            POSTGRES_PASSWORD: 'postgres'
+        volumes:
+            - ./data/db:/var/lib/posgresql/data
+        restart: always
+        container_name: database
+
+    app:
+        build: .
+        volumes:
+            - .:/ecommerce
+        ports:
+            - "8000:8000"
+        container_name: ecommerce
+
+        command: sh -c "
+            python3 manage.py makemigrations --noinput &&
+            python3 manage.py migrate --noinput &&
+            python3 manage.py runserver 0.0.0.0:8000
+            "
+        restart: on-failure
+        depends_on:
+            - redis
+            - db
+
+    celery:
+        build: .
+        container_name: celery_service
+        command: celery -A ecommerce worker -l info --pool=solo
+        volumes:
+            - .:/ecommerce
+        depends_on:
+            - app
+        restart: on-failure
+
+    celery-beat:
+        build: .
+        container_name: celery_beat_service
+        command: celery -A ecommerce beat -l INFO
+        restart: on-failure
+        volumes:
+            - .:/ecommerce
+        depends_on:
+            - app
+
+    redis:
+        container_name: "redis_service"
+        image: "redis:alpine"
+        command: redis-server

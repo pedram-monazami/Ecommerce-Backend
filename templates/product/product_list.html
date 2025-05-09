@@ -1,0 +1,294 @@
+{% extends 'base/_base.html' %}
+{% load static %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block body %}
+
+    <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
+
+    <link rel="stylesheet" href='{% static 'CSS/price_slider.css' %}'>
+
+
+
+
+
+    <div class="container">
+
+        <div class="bg-white rounded d-flex align-items-center justify-content-between" id="header">
+            <button class="btn btn-hide text-uppercase" type="button" data-toggle="collapse" data-target="#filterbar"
+                    aria-expanded="false" aria-controls="filterbar" id="filter-btn"><span
+                    class="fas fa-angle-left" id="filter-angle"></span> <span id="btn-txt">Filters</span></button>
+            <input id="search-input" type="text" class="form-control m-2" placeholder="Enter To Search">
+        </div>
+        <div id="content" class="my-5">
+            <div id="filterbar" class="collapse">
+                <div class="box border-bottom">
+                    <div data-toggle="collapse" data-target="#inner-box"
+                         class="box-label text-uppercase d-flex align-items-center">Categories
+                        <button class="btn ml-auto" type="button" data-toggle="collapse" data-target="#inner-box"
+                                aria-expanded="false" aria-controls="inner-box" id="out" onclick="outerFilter()"><span
+                                class="fas fa-plus"></span></button>
+                    </div>
+                    <div id="inner-box" class="collapse mt-2 mr-1">
+                        {% for cat in object_list %}
+                            {% if cat.parent %}
+                                <ul class="nav prod-cat">
+                                    <li class="ml-3">
+                                        <a class="active cats" value="salam" href="#" akbar="{{ cat.pk }}"><i
+                                                class="fa fa-angle-right"> {{ cat.name }}</i>
+                                        </a>
+                                    </li>
+                                    <br>
+                                </ul>
+                            {% else %}
+                                <ul class="nav prod-cat">
+                                    <li>
+                                        <a class="active cats" value="salam" href="#" akbar="{{ cat.pk }}"><i
+                                                class="fa fa-angle-right"> {{ cat.name }}</i>
+                                        </a>
+                                    </li>
+                                    <br>
+                                </ul>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="box border-bottom">
+                    <div data-toggle="collapse" data-target="#inner-box2"
+                         class="box-label text-uppercase d-flex align-items-center">Brands
+                        <button class="btn ml-auto" type="button" data-toggle="collapse" data-target="#inner-box2"
+                                aria-expanded="false" aria-controls="inner-box2"><span class="fas fa-plus"></span>
+                        </button>
+                    </div>
+                    <div id="inner-box2" class="collapse mt-2 mr-1">
+                        <ul>
+                            {% for brand in brand %}
+                                <li>
+                                    <a brand="{{ brand.name }}" class="active brands" value="salam" href="#"
+                                       akbar="{{ cat.pk }}"><i
+                                            class="fa fa-angle-right">{{ brand.name }}</i>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="box border-bottom">
+                    <div data-toggle="collapse" data-target="#inner-box3"
+                         class="box-label text-uppercase d-flex align-items-center">Price
+                        <button class="btn ml-auto" type="button" data-toggle="collapse" data-target="#inner-box3"
+                                aria-expanded="false" aria-controls="inner-box3"><span class="fas fa-plus"></span>
+                        </button>
+                    </div>
+                    <div id="inner-box3" class="collapse mt-2 mr-1">
+                        <label>from<br>
+                            <input class="price_slider" id="mini" type="number" name="" style="width: 80px" value="10">
+                        </label>
+
+                        <label>to<br>
+                            <input class="price_slider" id="maxi" type="number" name="" style="width: 80px"
+                                   value="999999">
+                        </label>
+                        <br>
+                        <input class="btn btn-success" id="filter-price" type="button" value="Filter">
+                    </div>
+                </div>
+            </div>
+            <div id="products">
+                <div class="row mx-0">
+                    <div id="porsho" style="display: flex;flex-wrap: wrap" class="">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <input style="display: none" type="text" id="sam" category="" max-price="" min-price="">
+    {#        <input type="search" class="form-control" placeholder="Enter Keyword here">#}
+    <script>
+        $('#search-input').change(function () {
+            let search_input = $(this).val()
+            $.ajax({
+                type: "GET",
+                url: `{% url 'product_list_api' %}?name=${search_input}`,
+                success: function (response) {
+                    {#console.log('asdasdasdsad')#}
+                    $('#porsho').html('')
+                    for (let i of response) {
+                        console.log(i)
+                        $(`<div style='margin:5px 15px'>
+                            <div class="">
+                                <div class="product-image">
+                                    <a class='link' href="" onmouseover="fun(${i.id})">
+                                        <img class="pic-1" style="object-fit:fill" width='130px' height='130px' src="${i['image']}">
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <h3 class="title">
+                                        <a class='link' href="" onmouseover="fun(${i.id})">${i['brands']['name']} ${i['name']}</a>
+                                    </h3>
+                                    <div class="price">Price: ${i['price']}$
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `).appendTo($('#porsho'))
+
+                    }
+                },
+                error: function () {
+                }
+            })
+        })
+        $('.cats').click(function () {
+            let cat_id = $(this).attr("akbar");
+            $('#sam').attr('category', cat_id)
+            console.log(cat_id)
+            $.ajax({
+                type: "GET",
+                url: `{% url 'product_list_api' %}?category_id=${cat_id}`,
+                success: function (response) {
+                    $('#porsho').html('')
+                    for (let i of response) {
+                        $(`
+                        <div style='margin:5px 15px'>
+                            <div class="">
+                                <div class="product-image">
+                                    <a class='link' href="" onmouseover="fun(${i.id})">
+                                        <img class="pic-1" style="object-fit:fill" width='130px' height='130px' src="${i['image']}">
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <h3 class="title">
+                                        <a class='link' href="" onmouseover="fun(${i.id})">${i['brands']['name']} ${i['name']}</a>
+                                    </h3>
+                                    <div class="price">Price: ${i['price']}$
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`).appendTo($('#porsho'))
+
+
+                    }
+                },
+                error: function () {
+                    'error'
+                }
+            })
+        })
+        $('#filter-price').on('click', function () {
+            let mini = $('#mini').val()
+            let maxi = $('#maxi').val()
+            $('#sam').attr('max-price', maxi)
+            $('#sam').attr('min-price', mini)
+            let url = `{% url 'product_list_api' %}?price__lte=${maxi}&price__gte=${mini}`
+            if ($('#sam').attr('category')) {
+                let cat_id = $('#sam').attr('category')
+                {#let url = `{% url 'product_list_api' %}?price__lte=${maxi}&price__gte=${mini}&category_id=${cat_id}`#}
+                url = url + `&category_id=${cat_id}`
+                console.log(url)
+            }
+
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (response) {
+                    $('#porsho').html('')
+                    for (let i of response) {
+                        $(`
+                        <div style='margin:5px 15px'>
+                            <div class="">
+                                <div class="product-image">
+                                    <a class='link' href="" onmouseover="fun(${i.id})">
+                                        <img class="pic-1" style="object-fit:fill" width='130px' height='130px' src="${i['image']}">
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <h3 class="title">
+                                        <a hclass='link' href="" onmouseover="fun(${i.id})">${i['brands']['name']} ${i['name']}</a>
+                                    </h3>
+                                    <div class="price">Price: ${i['price']}$
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`).appendTo($('#porsho'))
+
+                    }
+                },
+
+                error: function () {
+                    'error'
+                }
+            })
+        })
+        $('.brands').click(function () {
+            let brand = $(this).attr('brand')
+            console.log('br', brand)
+            let cat_id = $('#sam').attr('category')
+            let maxi = $('#sam').attr('max-price')
+            let mini = $('#sam').attr('min-price')
+            let url = `{% url 'product_list_api' %}?brand__name=${brand}`
+            if ($('#sam').attr('max-price')) {
+                url = url + `&price__lte=${maxi}`
+            }
+            if ($('#sam').attr('min-price')) {
+                url = url + `&price__gte=${mini}`
+            }
+
+            if ($('#sam').attr('category')) {
+                let cat_id = $('#sam').attr('category')
+                url = url + `&category_id=${cat_id}`
+            }
+            {#console.log(brand)#}
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (response) {
+                    $('#porsho').html('')
+                    for (let i of response) {
+                        $(`
+                        <div style='margin:5px 15px'>
+                            <div class="">
+                                <div class="product-image">
+                                    <a class='link' href="" onmouseover="fun(${i.id})">
+                                        <img class="pic-1" style="object-fit:fill" width='130px' height='130px' src="${i['image']}">
+                                    </a>
+                                </div>
+                                <div class="product-content">
+                                    <h3 class="title">
+                                        <a class='link' href="" onmouseover="fun(${i.id})">${i['brands']['name']} ${i['name']}</a>
+                                    </h3>
+                                    <div class="price">Price: ${i['price']}$
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`).appendTo($('#porsho'))
+
+                    }
+                },
+                error: function () {
+                }
+            })
+        })
+
+        function fun(x) {
+            {#console.log('sads')#}
+            url = '{% url 'product_detail' 1 %}'
+            {#console.log('dsd')#}
+            url2 = url.split('/')
+            url2.pop()
+            url2.pop()
+            url2.push(x)
+            {#console.log(url2.join('/'))#}
+            $('.link').attr('href', url2.join('/'))
+        }
+
+
+    </script>
+    {#    <script src=""></script>#}
+    {#    <script src=""></script>#}
+    <script src="{% static 'JS/price_slider.js' %}"></script>
+{% endblock %}

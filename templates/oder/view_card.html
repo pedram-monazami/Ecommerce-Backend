@@ -1,0 +1,348 @@
+{% extends 'base/_base.html' %}
+{#{% load sass_tags %}#}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block body %}
+    <link rel="stylesheet" href="{% static 'CSS/cards.css' %}">
+    {#    <link href="{% sass_src 'CSS/cards.scss' %}" rel="stylesheet" type="text/css"/>#}
+    {#    {% if items %}#}
+
+    {% if items == 'new_user' or new == 'new' %}
+
+        <div class="page-wrap d-flex flex-row align-items-center">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-12 text-center">
+                        <span class="display-1 d-block">404</span>
+                        <div class="mb-4 lead">No orders yet.</div>
+                        <a href="{% url 'landing:index' %}" class="btn btn-link">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="shopping-cart">
+            <div class="column-labels">
+                <label class="product-image">Image</label>
+                <label class="product-details">Product</label>
+                <label class="product-price">Price</label>
+                <label class="product-quantity">Quantity</label>
+                <label class="product-removal">Remove</label>
+                <label class="product-line-price">Total</label>
+            </div>
+            {% for item in items %}
+                <div asqar={{ item.product.pk }} akbar="{{ item.id }}" class="product">  {#shak#}
+                    <div class="product-image">
+                        <img src="{{ item.product.image.url }}" alt="item.product.name">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-title">{{ item.product.name }}</div>
+                        <p class="product-description">{{ item.product.description }}</p>
+                    </div>
+                    <div class="product-price">{{ item.product.calc_discounted }}</div>
+                    <div class="product-quantity">
+                        <input asqar={{ item.product.id }} akbar="{{ item.id }}" class="product-quant" type="number"
+                               value="{{ item.count }}" min="1">
+                    </div>
+                    <div class="product-removal">
+                        <button asqar={{ item.product.id }} akbar="{{ item.id }}"
+                                class="remove-product remove-prod">
+                            Remove
+                        </button>
+                    </div>
+                    <div id="total" class="product-line-price">{{ item.total }}</div>
+                </div>
+                <input style="display: none" id="begir" type="text" akbar="{{ item.order.id }}">
+
+            {% endfor %}
+
+            <div class="totals">
+                {% if user.is_authenticated %}
+                    {% if address %}
+                        <div class="totals-item">
+                            <div class="total" id="cart">
+                                <label for="addresses">Choose an address:</label>
+                                <select name="cars" id="addresses">
+                                    {% for adr in address %}
+                                        <option uid="{{ adr.id }}" value="{{ adr.pk }}">{{ adr }}</option>
+                                    {% endfor %}
+                                </select>
+                                {#                    <button id="" type="button" class="btn btn-success">Apply</button>#}
+                                <input class="d-none" akbar="{{ address.0.id }}" id="akbar">
+                            </div>
+                        </div>
+                    {% else %}
+                        <h2 class="text-right my-3">Please go into your panel and add an address</h2>
+                    {% endif %}
+                {% endif %}
+                <div class="totals-item">
+                    <label>Off Code: </label>
+                    <div class="totals-value" id="cart-shipping" akbar="0.0">0.0</div>
+                    <input id="coupon_input" type="text" coupon_id="">
+                    <button id="coupon_button" type_attr="" value_attr="" type="button" class="btn btn-info">Apply
+                    </button>
+                </div>
+                <div class="totals-item totals-item-total">
+                    <label>Total Order Price</label>
+                    <div class="totals-value" id="cart-subtotal" value="{{ total }}">{{ total }}</div>
+                </div>
+                <div class="totals-item totals-item-total">
+                    <label>Grand Total</label>
+                    <div class="totals-value" id="cart-total" value="{{ final }}">{{ final }}</div>
+                </div>
+            </div>
+            {% if address %}
+                <button class="checkout">Pay Now</button>
+            {% endif %}
+
+        </div>
+    {% endif %}
+    <script>
+        /* Set rates + misc */
+        var taxRate = 0;
+        var shippingRate = 0;
+        var fadeTime = 300;
+        /* Assign actions */
+        $(".product-quantity input").change(function () {
+            updateQuantity(this);
+        });
+
+        /* Recalculate cart */
+        function recalculateCart() {
+            var subtotal = 0;
+
+            /* Sum up row totals */
+            $(".product").each(function () {
+                subtotal += parseFloat($(this).children(".product-line-price").text());
+            });
+
+            /* Calculate totals */
+            var tax = 0;
+            var shipping = 0
+            var type = $(`#coupon_button`).attr('type_attr')
+            var amount = $(`#coupon_button`).attr('value_attr')
+
+            if (type) {
+                if ($(`#coupon_button`).attr('type_attr') === 'cent') {
+                    shipping = subtotal * amount / 100
+                    $(`#cart-shipping`).attr('akbar', shipping)
+                } else if ($(`#coupon_button`).attr('type_attr') === 'val') {
+                    if (subtotal > amount) {
+                        shipping = Number(amount)
+                        $(`#cart-shipping`).attr('akbar', Number(amount))
+                    } else if (subtotal <= amount) {
+                        shipping = 0
+                        $(`#cart-shipping`).attr('akbar', 0)
+                    }
+                }
+            }
+            var total = subtotal - shipping;
+
+            /* Update totals display */
+            $(".totals-value").fadeOut(fadeTime, function () {
+                $("#cart-subtotal").html(subtotal.toFixed(2));
+                $("#cart-tax").html(tax.toFixed(2));
+                $("#cart-shipping").html(shipping.toFixed(2));
+                $("#cart-total").html(total.toFixed(2));
+                if (total === 0) {
+                    $(".checkout").fadeOut(fadeTime);
+                } else {
+                    $(".checkout").fadeIn(fadeTime);
+                }
+                $(".totals-value").fadeIn(fadeTime);
+            });
+        }
+
+        /* Update quantity */
+        function updateQuantity(quantityInput) {
+            /* Calculate line price */
+            var productRow = $(quantityInput).parent().parent();
+            var price = parseFloat(productRow.children(".product-price").text());
+            var quantity = $(quantityInput).val();
+            var linePrice = price * quantity;
+
+            /* Update line price display and recalc cart totals */
+            productRow.children(".product-line-price").each(function () {
+                $(this).fadeOut(fadeTime, function () {
+                    $(this).text(linePrice.toFixed(2));
+                    recalculateCart();
+                    $(this).fadeIn(fadeTime);
+                });
+            });
+        }
+
+        /* Remove item from cart */
+        function removeItem(removeButton) {
+            /* Remove row from DOM and recalc cart total */
+            var productRow = $(removeButton).parent().parent();
+            productRow.slideUp(fadeTime, function () {
+                productRow.remove();
+                recalculateCart();
+            });
+        }
+
+        $(".checkout").click(function () {
+            let total = $(`#cart-subtotal`).html()
+            let final = $(`#cart-total`).html()
+            let order_id = $('#begir').attr('akbar')
+            let address_id = parseInt($('#akbar').attr('akbar'))
+            let coupon_id = $(`#coupon_input`).attr('coupon_id')
+
+            console.log('total', total)
+            console.log('final', final)
+            console.log('order_id', order_id)
+            console.log('address_id', address_id)
+            console.log('coupon_id1', coupon_id)
+
+            $.ajax({
+                type: "PATCH",
+                data: {
+                    'total_price': total,
+                    {#'status_id': 2,#}
+                    'address': address_id,
+                    'coupon': coupon_id,
+                    'final_price': final
+                },
+                url: '{% url 'update_item' 1 %}'.replace('1', order_id),
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function (response) {
+                    Swal.fire(
+                        'Done!',
+                        'Checkout done!',
+                        'success'
+                    )
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Failed!',
+                    })
+                }
+            })
+        });
+
+        $("#addresses").change(function () {
+            let x = $(this).val()
+            $('#akbar').attr('akbar', x)
+            console.log(x)
+        });
+
+        $(".product-quant").focus(function () {
+            let val_before = $(this).val()
+            let count = Number($(`#lblCartCount`).html())
+            global_number = count - val_before
+        })
+
+        $(".product-quant").change(function () {
+            let count = $(this).val()
+            let product = $(this).attr('asqar')
+            let item_id = $(this).attr('akbar')
+            {#console.log('pr', product)#}
+            {#console.log('ite', item_id)#}
+            $.ajax({
+                type: "PATCH",
+                data: {'product': product, 'count': count},
+                url: '{% url 'orderitem-detail' 0 %}'.replace('0', item_id),
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function (response) {
+                    let new_count = global_number + Number(count)
+                    $(`#lblCartCount`).html(new_count)
+                },
+                error: function () {
+                }
+            })
+        });
+
+        $(".remove-prod").click(function () {
+            let item_id = $(this).attr('akbar')
+            let product_id = $(this).attr('asqar')
+            let thi_s = $(this)
+            console.log(product_id)
+            $.ajax({
+                type: "DELETE",
+                data: {'product': product_id},
+                url: '{% url 'orderitem-list' %}' + `${item_id}`,
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function (response) {
+                    let quantity = thi_s.parent().parent().children('div.product-quantity').children('input.product-quant').val()
+                    let my_count = $(`#lblCartCount`).html()
+                    let new_count = Number(my_count) - Number(quantity)
+                    $(`#lblCartCount`).html(new_count)
+                    removeItem(thi_s)
+                },
+                error: function () {
+                }
+            })
+        })
+
+        $("#coupon_button").click(function () {
+            let coupon = $(`#coupon_input`).val()
+            let order_id = $(`#begir`).attr('akbar')
+            console.log('coupon', coupon)
+            console.log('order_id', order_id)
+            $.ajax({
+                type: "PATCH",
+                data: {'coupon': coupon},
+                url: '{% url 'coupon' 0 %}'.replace('0', order_id),
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function (response) {
+                    Swal.fire(
+                        'Done!',
+                        'Coupon saved!',
+                        'success'
+                    )
+                    $.ajax({
+                        type: "GET",
+                        url: '{% url 'coupon_get' 0 %}'.replace('0', response['coupon']),
+                        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                        success: function (response) {
+                            {#console.log('hi', response)#}
+                            $(`#coupon_input`).attr('coupon_id', response['id'])
+                            if (response['type'] === 'val') {
+                                let total = $(`#cart-subtotal`).html()
+                                {#console.log('asd',total)#}
+                                let amount = Number(response['amount'])
+                                let final = total - amount
+                                $(`#cart-shipping`).attr('akbar', amount)
+                                $(`#cart-shipping`).html(amount)
+                                $(`#cart-total`).html(final)
+                                $(`#cart-total`).val(final)
+                                $(`#coupon_button`).attr('type_attr', response['type'])
+                                $(`#coupon_button`).attr('value_attr', response['amount'])
+
+                            } else if (response['type'] === 'cent') {
+                                let total = $(`#cart-subtotal`).html()
+                                let amount = Number(response['amount'])
+                                let final = total - (total * amount / 100)
+                                $(`#cart-shipping`).attr('akbar', total * amount / 100)
+                                $(`#cart-shipping`).html(total * amount / 100)
+                                $(`#cart-total`).html(final)
+                                $(`#cart-total`).val(final)
+                                $(`#coupon_button`).attr('type_attr', response['type'])
+                                $(`#coupon_button`).attr('value_attr', response['amount'])
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'No such code!',
+                            })
+                        }
+                    })
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'No such code!',
+                    })
+                }
+            })
+        })
+
+    </script>
+{% endblock %}
